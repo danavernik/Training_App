@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boole
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from db import Base
 
+
 class user(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True, index=True)
@@ -20,6 +21,8 @@ class workout(Base):
     workout_progress = relationship("workout_progress", back_populates="workout") 
     exersice = relationship("exersice", back_populates="workout") 
     workout_exersice = relationship("workout_exersice", back_populates="workout") 
+    class Config:
+        orm_mode = True
 
 class exersice(Base):
     __tablename__ = 'exersices'
@@ -27,6 +30,7 @@ class exersice(Base):
     name = Column(String(50), unique=True)
     muscles = Column(String(50), unique=True)
     equipment = Column(String(50), unique=True)
+    gif_url = Column(String(100), unique=True)
     workout = relationship("workout", back_populates="exersice") 
     workout_exersice = relationship("workout_exersice", back_populates="exersice") 
 

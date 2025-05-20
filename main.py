@@ -2,9 +2,15 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db import SessionLocal
 from models import user, workout, exersice
-from . import models, schemas, db
+import models, schemas, db
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
+
 
 app=FastAPI()
+
+app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],)
+
 
 def get_db():
     db = SessionLocal()
@@ -18,7 +24,7 @@ def get_db():
 def root():
     return {"hello":"world"}
 
-@app.get("/workouts", response_model=schemas.workout)
+@app.get("/workouts", response_model=List[schemas.workout])
 def read_workouts(db: Session = Depends(get_db)):
     workouts = db.query(workout).all()
     return workouts
