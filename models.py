@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from db import Base
-
+from typing import List
 
 class user(Base):
     __tablename__ = 'users'
@@ -9,30 +9,7 @@ class user(Base):
     username = Column(String(50))
     password = Column(String(50), unique=True, index=True)
     workout = relationship("workout", back_populates="user")
-    workout_progress = relationship("workout_progress", back_populates="user") 
-
-class workout(Base):
-    __tablename__ = 'workouts'
-    workout_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"))
-    exersice_id = Column(Integer, ForeignKey("exersices.exersice_id"))
-    user = relationship("user", back_populates="workout") 
-    workout_progress = relationship("workout_progress", back_populates="workout") 
-    exersice = relationship("exersice", back_populates="workout") 
-    workout_exersice = relationship("workout_exersice", back_populates="workout") 
-    class Config:
-        orm_mode = True
-
-class exersice(Base):
-    __tablename__ = 'exersices'
-    exersice_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True)
-    muscles = Column(String(50), unique=True)
-    equipment = Column(String(50), unique=True)
-    gif_url = Column(String(100), unique=True)
-    workout = relationship("workout", back_populates="exersice") 
-    workout_exersice = relationship("workout_exersice", back_populates="exersice") 
+    workout_progress = relationship("workout_progress", back_populates="user")
 
 class workout_exersice(Base):
     __tablename__ = 'workout_exersices'
@@ -43,6 +20,29 @@ class workout_exersice(Base):
     exersice_id = Column(Integer, ForeignKey("exersices.exersice_id"))
     workout = relationship("workout", back_populates="workout_exersice") 
     exersice = relationship("exersice", back_populates="workout_exersice") 
+    
+class exersice(Base):
+    __tablename__ = 'exersices'
+    exersice_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True)
+    muscles = Column(String(50))
+    equipment = Column(String(50))
+    gif_url = Column(String(100), unique=True)
+    #workout = relationship("workout", back_populates="exersice") 
+    workout_exersice = relationship("workout_exersice", back_populates="exersice") 
+
+class workout(Base):
+    __tablename__ = 'workouts'
+    workout_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    #exersice_id = Column(List[exersice], ForeignKey("exersices.exersice_id"))
+    user = relationship("user", back_populates="workout") 
+    workout_progress = relationship("workout_progress", back_populates="workout") 
+    #exersice = relationship("exersice", secondary=workout_exersice, back_populates="workout") 
+    workout_exersice = relationship("workout_exersice", back_populates="workout") 
+    class Config:
+        orm_mode = True
 
 class workout_progress(Base):
     __tablename__ = 'workout_progress'

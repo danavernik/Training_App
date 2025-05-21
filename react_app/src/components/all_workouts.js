@@ -1,4 +1,5 @@
 import React, { useRef , useEffect, useState} from "react";
+import { Link } from 'react-router-dom';
 
 function All_workouts() {
     const [workouts, setWorkouts] = useState([]);
@@ -18,11 +19,20 @@ function All_workouts() {
         });
     }, []);
   return (
-    <div>
-      <h1>All workouts</h1>
-      <p>{workouts.map((workout, index) => (
-        <li key={index}>{workout.name}</li>
-      ))}</p>
+<div>
+      <h1>All Workouts</h1>
+      {workouts.map((workout) => (
+        <div key={workout.workout_id} style={{ marginBottom: "20px" }}>
+          <h2><Link to="/workout_details" style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> {workout.name}</Link></h2>
+          <ul>
+            {workout.workout_exersice?.map((item) => (
+              <li key={item.id}>
+                Exersice: {item.exersice.name} | reps: {item.reps} | placement: {item.placement}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
