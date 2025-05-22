@@ -2,11 +2,10 @@ FROM node:18
 
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY react_app/package*.json ./
 RUN npm install
 
-COPY . .
+COPY react_app/ .
 
 RUN npm run build
 

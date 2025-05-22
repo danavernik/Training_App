@@ -41,3 +41,11 @@ class WorkoutCreate(BaseModel):
     name: str
     user_id: int
     workout_exersice: List[WorkoutExersiceCreate]
+
+class ExersicesInWorkout(BaseModel):
+    id: int
+    name: str
+    reps: int
+    placement: int
+    class Config:
+        orm_mode = True

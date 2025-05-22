@@ -2,24 +2,28 @@ version: "3.8"
 
 services:
   backend:
-    build: ./backend
-    container_name: training_backend
+    build:
+      context: .
+      dockerfile: dockerfile.backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - .:/app
     depends_on:
       - db
     environment:
       - DATABASE_URL=mysql+pymysql://root:M1a1p1l1e!@db:3306/training_db
 
   frontend:
-    build: ./Frontend
-    container_name: training_frontend
+    build:
+      context: .
+      dockerfile: dockerfile.frontend
     ports:
-      - "3000:80"
-    depends_on:
-      - backend
+      - "3000:3000"
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
 
   db:
     image: mysql:8.0

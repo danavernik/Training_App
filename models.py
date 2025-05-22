@@ -15,7 +15,7 @@ class workout_exersice(Base):
     __tablename__ = 'workout_exersices'
     id = Column(Integer, primary_key=True, index=True)
     reps = Column(Integer)
-    placement = Column(Integer, unique=True)
+    placement = Column(Integer)
     workout_id = Column(Integer, ForeignKey("workouts.workout_id"))
     exersice_id = Column(Integer, ForeignKey("exersices.exersice_id"))
     workout = relationship("workout", back_populates="workout_exersice") 

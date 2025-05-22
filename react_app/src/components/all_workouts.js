@@ -23,14 +23,7 @@ function All_workouts() {
       <h1>All Workouts</h1>
       {workouts.map((workout) => (
         <div key={workout.workout_id} style={{ marginBottom: "20px" }}>
-          <h2><Link to="/workout_details" style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> {workout.name}</Link></h2>
-          <ul>
-            {workout.workout_exersice?.map((item) => (
-              <li key={item.id}>
-                Exersice: {item.exersice.name} | reps: {item.reps} | placement: {item.placement}
-              </li>
-            ))}
-          </ul>
+          <h2><Link to={`/workouts/${workout.workout_id}`} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> {workout.name}</Link></h2>
         </div>
       ))}
     </div>

@@ -15,8 +15,8 @@ function App() {
       <Route path="/" element={<Greet />} />
       <Route path="/All_workouts" element={<All_workouts />} />
       <Route path="/create_workout" element={<Create_workout />} />
-      <Route path="/workout_details" element={<Workout_details />} />
-      <Route path="/perform_exersice" element={<Perform_exersice />} />
+      <Route path="/workouts/:id" element={<Workout_details />} />
+      <Route path="/workouts/:id/perform/" element={<Perform_exersice />} />
 
     </Routes>
   </BrowserRouter>

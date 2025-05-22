@@ -5,11 +5,10 @@ from models import user, workout, exersice, workout_exersice
 import models as models, schemas as schemas, db as db
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from schemas import WorkoutExersiceCreate, WorkoutCreate
+from schemas import WorkoutExersiceCreate, WorkoutCreate, ExersicesInWorkout
 
 
-app=FastAPI()
-router = APIRouter()
+app=FastAPI() 
 
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],)
 
@@ -42,19 +41,46 @@ def read_exersices(db: Session = Depends(get_db)):
 #       raise HTTPException(status_code=404, detail="Workout not found")
 #    return workout
 
-@app.get("/workouts/{workout_id}")
-def get_workout(workout_id: int, db: Session = Depends(get_db)):
-    workout = db.query(workout).filter(workout.workout_id == workout_id).first()
+@app.get("/workouts/{workout_id}/exersices", response_model=list[ExersicesInWorkout]) #מחזיר את כל התרגילים ששייכים לאימון
+def get_exercises_for_workout(workout_id: int, db: Session = Depends(get_db)):
+    workout_exersices = (
+        db.query(workout_exersice)
+        .filter(workout_exersice.workout_id == workout_id)
+        .all()
+    )
+    if not workout_exersices:
+        raise HTTPException(status_code=404, detail="Workout not found or has no exercises")
+    results = []
+    for we in workout_exersices:
+        exersice_db = db.query(exersice).filter(exersice.exersice_id == we.exersice_id).first()
+        results.append({
+            "id": exersice_db.exersice_id,
+            "name": exersice_db.name,
+            "reps": we.reps,
+            "placement": we.placement
+        })
+    return results
+
+@app.get("/workouts/{id}/perform/", response_model=ExersicesInWorkout) #מחזיר תרגיל מאימון לפי הסדר
+def get_exercise_by_placement(id: int, placement: int, db: Session = Depends(get_db)):
+    we = (
+        db.query(workout_exersice)
+        .filter(
+            workout_exersice.workout_id == id,
+            workout_exersice.placement == placement
+        )
+        .first()
+    )
+    if not we:
+        raise HTTPException(status_code=404, detail="Exercise not found")
+    ex = db.query(exersice).filter(exersice.exersice_id == we.exersice_id).first()
     return {
-        "name": workout.name,
-        "exersices": [
-            {
-                "exersice name": we.exercise.name,
-                "reps": we.reps,
-                "placement": we.placement
-            } for we in workout.workout_exercises
-        ]
+        "id": ex.exersice_id,
+        "name": ex.name,
+        "reps": we.reps,
+        "placement": we.placement
     }
+
 @app.get("/exersices/{exersice_id}")#מחזיר אימון לפי מזהה
 def read_exersices(exersices_id: int, db: Session = Depends(get_db)):
     exersice = db.query(exersice).filter(models.exersice.exersice_id == exersices_id).first()
