@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, APIRouter
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db import SessionLocal
 from models import user, workout, exersice, workout_exersice
@@ -6,11 +6,13 @@ import models as models, schemas as schemas, db as db
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from schemas import WorkoutExersiceCreate, WorkoutCreate, ExersicesInWorkout
+from fastapi.staticfiles import StaticFiles
 
 
 app=FastAPI() 
 
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 def get_db():
@@ -34,20 +36,12 @@ def read_workouts(db: Session = Depends(get_db)):
 def read_exersices(db: Session = Depends(get_db)):
     exersices = db.query(exersice).all()
     return exersices
-#@app.get("/workouts/{workout_id}")
-#def read_workouts(workout_id: int, db: Session = Depends(get_db)):
-#    workout = db.query(workout).filter(models.Workout.workout_id == workout_id).first()
-#    if not workout:
-#       raise HTTPException(status_code=404, detail="Workout not found")
-#    return workout
 
 @app.get("/workouts/{workout_id}/exersices", response_model=list[ExersicesInWorkout]) #מחזיר את כל התרגילים ששייכים לאימון
 def get_exercises_for_workout(workout_id: int, db: Session = Depends(get_db)):
     workout_exersices = (
         db.query(workout_exersice)
-        .filter(workout_exersice.workout_id == workout_id)
-        .all()
-    )
+        .filter(workout_exersice.workout_id == workout_id).all())
     if not workout_exersices:
         raise HTTPException(status_code=404, detail="Workout not found or has no exercises")
     results = []
@@ -57,7 +51,9 @@ def get_exercises_for_workout(workout_id: int, db: Session = Depends(get_db)):
             "id": exersice_db.exersice_id,
             "name": exersice_db.name,
             "reps": we.reps,
-            "placement": we.placement
+            "placement": we.placement,
+            "gif_url": exersice_db.gif_url
+
         })
     return results
 
@@ -67,9 +63,7 @@ def get_exercise_by_placement(id: int, placement: int, db: Session = Depends(get
         db.query(workout_exersice)
         .filter(
             workout_exersice.workout_id == id,
-            workout_exersice.placement == placement
-        )
-        .first()
+            workout_exersice.placement == placement).first()
     )
     if not we:
         raise HTTPException(status_code=404, detail="Exercise not found")
@@ -78,7 +72,8 @@ def get_exercise_by_placement(id: int, placement: int, db: Session = Depends(get
         "id": ex.exersice_id,
         "name": ex.name,
         "reps": we.reps,
-        "placement": we.placement
+        "placement": we.placement,
+        "gif_url": ex.gif_url
     }
 
 @app.get("/exersices/{exersice_id}")#מחזיר אימון לפי מזהה
@@ -87,6 +82,21 @@ def read_exersices(exersices_id: int, db: Session = Depends(get_db)):
     if not exersice:
         raise HTTPException(status_code=404, detail="exersice not found")
     return exersice
+
+@app.post("/workouts") #מוסיף אימון חדש
+def create_workout(workout_data: WorkoutCreate, db: Session = Depends(get_db)):
+    workout_db = workout(name=workout_data.name, user_id=1)
+    db.add(workout_db)
+    db.flush()
+    for idx, ex in enumerate(workout_data.workout_exersices):
+        we = workout_exersice(
+            workout_id=workout_db.workout_id,
+            exersice_id=ex.exersice_id,
+            reps=ex.reps,
+            placement=idx + 1
+        )
+        db.add(we)
+    db.commit()
 
 @app.post("/workout_exersices")#מוסיף תרגיל לאימון
 def add_exersice_to_workout(data: WorkoutExersiceCreate, db: Session = Depends(get_db)):
@@ -100,27 +110,3 @@ def add_exersice_to_workout(data: WorkoutExersiceCreate, db: Session = Depends(g
     db.commit()
     db.refresh(new_link)
     return new_link
-
-@app.post("/workouts/", response_model=schemas.workout) #מוסיף אימון חדש
-def create_workout(workout: WorkoutCreate, db: Session = Depends(get_db)):
-    db_workout = models.workout(**workout.dict())
-    db.add(db_workout)
-    db.commit()
-    db.refresh(db_workout)
-    return db_workout
-
-@app.post("/workouts/{workout_id}/add-exersice/{exersice_id}")
-def link_exercise_to_workout(workout_id: int, exersice_id: int, db: Session = Depends(get_db)):
-    workout = db.query(models.Workout).filter(models.Workout.workout_id == workout_id).first()
-    if not workout:
-        raise HTTPException(status_code=404, detail="Workout not found")
-    exersice = db.query(models.exersice).filter(models.exersice.exersice_id == exersice_id).first()
-    if not exersice:
-        raise HTTPException(status_code=404, detail="exersice not found")
-    if exersice in workout.exersices:
-        return {"message": "exersice already linked to this workout."}
-
-    workout.exersices.append(exersice)
-    db.commit()
-
-    return {"message": "exersice linked successfully", "workout_id": workout_id, "exersice_id": exersice_id}

@@ -4,19 +4,16 @@ import { useNavigate } from "react-router-dom";
 function Greet() 
 {
 const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/all_workouts");
-};
 return(
         <div>
-      <h1>Build Your Workout</h1>
-        <button onClick={() => navigate('/all_workouts')}>all workouts</button>
+      <h1 style={{ display: 'flex', justifyContent: 'center' }}>Build Your Workout</h1>
+      <h2  style={{ display: 'flex', justifyContent: 'center' }}>
+        <button onClick={() => navigate('/all_workouts')} >all workouts</button>
         <button onClick={() => navigate('/create_workout')}>create workout</button>
+      </h2>
     </div>
 )
 }
-
-
 
 export default Greet
 

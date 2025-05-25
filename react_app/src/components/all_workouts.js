@@ -20,11 +20,11 @@ function All_workouts() {
     }, []);
   return (
 <div>
-      <h1>All Workouts</h1>
+      <h1 style={{ display: 'flex', justifyContent: 'center' }}>All Workouts</h1>
       {workouts.map((workout) => (
-        <div key={workout.workout_id} style={{ marginBottom: "20px" }}>
-          <h2><Link to={`/workouts/${workout.workout_id}`} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> {workout.name}</Link></h2>
-        </div>
+          <div key={workout.workout_id} style={{ display: 'flex', justifyContent: 'center' }}>
+            <h2><Link to={`/workouts/${workout.workout_id}`} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> {workout.name}</Link></h2>
+          </div>
       ))}
     </div>
   );

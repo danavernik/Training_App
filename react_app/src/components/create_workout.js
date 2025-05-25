@@ -1,88 +1,85 @@
 import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
 function Create_workout() {
-  const [name, setName] = useState('');
-  const [userId, setUserId] = useState('');
-  const [allExercises, setAllExercises] = useState([]);
-  const [selectedExercises, setSelectedExercises] = useState([]);
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [allExersices, setAllExersices] = useState([]);
+  const [selectedExersices, setSelectedExersices] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/exersices')
-      .then(res => res.json())
-      .then(data => setAllExercises(data))
-      .catch(err => console.error("Error fetching exercises:", err));
+    axios.get("http://localhost:8000/exersices").then((res) => {
+      setAllExersices(res.data);
+    });
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      name: name,
-      user_id: parseInt(userId),
-      workout_exersice: selectedExercises.map((exId, index) => ({
-        exersice_id: exId,
-        reps: 10, 
-        placement: index
-      }))
-    };
-
-    try {
-      const response = await fetch('http://localhost:8000/workouts/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create workout');
-      }
-
-      const result = await response.json();
-      setMessage(`Workout "${result.name}" created successfully!`);
-      setName('');
-      setUserId('');
-      setSelectedExercises([]);
-    } catch (error) {
-      console.error(error);
-      setMessage('Error creating workout');
+  const handleAddExersice = (exerciseId) => {
+    if (!selectedExersices.find(e => e.exersice_id === exerciseId)) {
+      setSelectedExersices([...selectedExersices, { exersice_id: exerciseId, reps: 10 }]);
     }
   };
 
-  const handleExerciseChange = (e) => {
-    const selected = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-    setSelectedExercises(selected);
+  const handleRepsChange = (index, reps) => {
+    const newList = [...selectedExersices];
+    newList[index].reps = reps;
+    setSelectedExersices(newList);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post("http://localhost:8000/workouts", {
+      name,user_id: 1,
+      workout_exersices: selectedExersices
+    }).then(() => {
+      alert("Workout created!");
+      setName("");
+      setSelectedExersices([]);
+    });
   };
 
   return (
-    <div>
-      <h2>Create New Workout</h2>
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block font-medium">שם האימון</label>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="border p-2 rounded w-full" />
+      </div>
+
+      <div>
+        <label className="block font-medium">בחר תרגילים</label>
+        {allExersices.map(ex => (
+          <div key={ex.exersice_id} className="flex justify-between items-center border p-2 mb-1 rounded">
+            <span>{ex.name}</span>
+            <button type="button" onClick={() => handleAddExersice(ex.exersice_id)} className="bg-blue-500 text-white px-2 py-1 rounded">
+              הוסף
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {selectedExersices.length > 0 && (
         <div>
-          <label>Workout Name: </label>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} required />
+          <h3 className="font-semibold">תרגילים שנבחרו:</h3>
+          {selectedExersices.map((ex, index) => {
+            const name = allExersices.find(e => e.exersice_id === ex.exersice_id)?.name || "לא נמצא";
+            return (
+              <div key={index} className="flex items-center space-x-2">
+                <span>{index + 1}. {name}</span>
+                <input
+                  type="number"
+                  value={ex.reps}
+                  onChange={(e) => handleRepsChange(index, Number(e.target.value))}
+                  className="border p-1 w-20"
+                />
+                <span>חזרות</span>
+              </div>
+            );
+          })}
         </div>
-        <div>
-          <label>User ID: </label>
-          <input type="number" value={userId} onChange={e => setUserId(e.target.value)} required />
-        </div>
-        <div>
-          <label>Select Exercises:</label>
-          <select multiple value={selectedExercises.map(String)} onChange={handleExerciseChange}>
-            {allExercises.map(ex => (
-              <option key={ex.exersice_id} value={ex.exersice_id}>
-                {ex.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <button type="submit">Create Workout</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+      )}
+
+      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">צור אימון</button>
+    </form>
   );
 }
+
 
 export default Create_workout;

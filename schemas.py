@@ -11,6 +11,7 @@ class exersice(BaseModel):
     name: str
     muscles: str
     equipment: str
+    gif_url: str
 
 class workout(BaseModel):
     workout_id: int
@@ -35,17 +36,18 @@ class workout_progress(BaseModel):
 class WorkoutExersiceCreate(BaseModel):
     exersice_id: int
     reps: int
-    placement: int
 
 class WorkoutCreate(BaseModel):
     name: str
     user_id: int
-    workout_exersice: List[WorkoutExersiceCreate]
+    workout_exersices: List[WorkoutExersiceCreate]
 
 class ExersicesInWorkout(BaseModel):
     id: int
     name: str
     reps: int
     placement: int
+    gif_url: str
+
     class Config:
         orm_mode = True

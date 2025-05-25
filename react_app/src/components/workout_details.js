@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 
 function WorkoutDetails() {
-  const { id } = useParams(); // זה נותן לנו את ה-workout_id מה-URL
+  const { id } = useParams(); 
   const [exercises, setExercises] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -17,22 +16,19 @@ function WorkoutDetails() {
         const response = await axios.get(`http://localhost:8000/workouts/${id}/exersices`);
         setExercises(response.data);
       } catch (err) {
-        setError("Failed to fetch exercises.");
+        setError("Failed to find exersices");
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchExercises();
   }, [id]);
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <div>
-      <h2>Workout #{id} - Exercises
+      <h2>Exercises
       {exercises.length === 0 ? (
         <p>No exercises found.</p>
       ) : (
