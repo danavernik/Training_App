@@ -51,3 +51,10 @@ class ExersicesInWorkout(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ProgressCreate(BaseModel):
+    time_progress: int
+    accomplished: bool
+    user_id: int
+    workout_id: int
+    exersice_id: int

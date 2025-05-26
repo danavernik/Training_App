@@ -32,13 +32,45 @@ const { id} = useParams();
     return () => clearInterval(interval);
   }, []);
 
-  const handleNext = () => {
-    setPlacement((prev) => prev + 1)
-      setSeconds(0);};
+  const handleNext = async () => {
+    const data = {
+      time_progress: seconds,
+      accomplished: true,
+      user_id: 1,
+      workout_id: Number(id),
+      exersice_id: exersice.id
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/progress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseText = await response.text(); // נשלוף את גוף התגובה (גם אם שגיאה)
+  console.error("Body:", responseText);
+      if (!response.ok) {
+        console.error("Server error:");
+        console.error("Status:", response.status);
+      /* console.error("Body:", responseText);*/
+
+        throw new Error(`Failed to save progress. Status: ${response.status}`);
+      }
+
+      alert("Progress data saved!");
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`Error saving progress: ${error.message}`);
+    }
+        setPlacement((prev) => prev + 1)
+        setSeconds(0);
+    };
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!exersice) return <p>Loading exercise...</p>;
-  
   return (
     <div>
       <h2 style={{ display: 'flex', justifyContent: 'center' }}>Exercise number {exersice.placement}</h2>

@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db import SessionLocal
-from models import user, workout, exersice, workout_exersice
+from models import user, workout, exersice, workout_exersice, workout_progress
 import models as models, schemas as schemas, db as db
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from schemas import WorkoutExersiceCreate, WorkoutCreate, ExersicesInWorkout
+from schemas import WorkoutExersiceCreate, WorkoutCreate, ExersicesInWorkout, ProgressCreate
 from fastapi.staticfiles import StaticFiles
 
 
@@ -110,3 +110,17 @@ def add_exersice_to_workout(data: WorkoutExersiceCreate, db: Session = Depends(g
     db.commit()
     db.refresh(new_link)
     return new_link
+
+@app.post("/progress")#מוסיף רשומת ביצוע תרגיל
+def add_progress(data: ProgressCreate, db: Session = Depends(get_db)):
+    progress_db = workout_progress(
+        time_progress=data.time_progress,
+        accomplished=data.accomplished,
+        user_id=data.user_id,
+        workout_id=data.workout_id,
+        exersice_id=data.exersice_id
+    )
+    db.add(progress_db)
+    db.commit()
+    db.refresh(progress_db)
+    return progress_db

@@ -32,7 +32,7 @@ function WorkoutDetails() {
       {exercises.length === 0 ? (
         <p>No exercises found.</p>
       ) : (
-        <ul>
+        <ol>
           {exercises
             .sort((a, b) => a.placement - b.placement)
             .map((ex) => (
@@ -41,7 +41,7 @@ function WorkoutDetails() {
               </li>
 
             ))}
-        </ul>
+        </ol>
       )}
       <button onClick={() => navigate(`/workouts/${id}/perform`)}>start now!</button>
       </h2>

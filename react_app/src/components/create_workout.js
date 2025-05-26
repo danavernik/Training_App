@@ -38,18 +38,24 @@ function Create_workout() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block font-medium">שם האימון</label>
+      <div style={{ display: 'flex', justifyContent: 'center',marginBottom: '2rem'}}>
+        <label className="block font-medium">workout name - </label>
         <input value={name} onChange={(e) => setName(e.target.value)} className="border p-2 rounded w-full" />
       </div>
 
-      <div>
-        <label className="block font-medium">בחר תרגילים</label>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <label className="block font-medium">choose exersices from the exersices pool</label>
         {allExersices.map(ex => (
-          <div key={ex.exersice_id} className="flex justify-between items-center border p-2 mb-1 rounded">
+          <div key={ex.exersice_id} style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '300px',
+        border: '1px solid #ccc',
+        padding: '0.5rem',
+      }} className="flex justify-between items-center border p-2 mb-1 rounded">
             <span>{ex.name}</span>
             <button type="button" onClick={() => handleAddExersice(ex.exersice_id)} className="bg-blue-500 text-white px-2 py-1 rounded">
-              הוסף
+              Add
             </button>
           </div>
         ))}
