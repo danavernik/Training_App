@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from db import SessionLocal
 from models import user, workout, exersice, workout_exersice, workout_progress
@@ -124,3 +124,21 @@ def add_progress(data: ProgressCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(progress_db)
     return progress_db
+
+@app.get("/search_exersices") #חיפוש תרגיל לפי שם, שריר או ציוד
+def search_exersices(name: str = Query(None), muscles: str = Query(None), equipment: str= Query(None), db: Session = Depends(get_db)):
+    query = db.query(exersice)
+    if name:
+        query = query.filter(exersice.name.ilike(f"%{name}%"))
+    if muscles:
+        query = query.filter(exersice.muscles.ilike(f"%{muscles}%"))
+    if equipment:
+        query = query.filter(exersice.equipment.ilike(f"%{equipment}%"))
+    return query.all()
+
+@app.get("/search_workouts") #חיפוש אימון לפי שם
+def search_exersices(name: str = Query(None), db: Session = Depends(get_db)):
+    query = db.query(exersice)
+    if name:
+        query = query.filter(exersice.name.ilike(f"%{name}%"))
+    return query.all()

@@ -5,7 +5,20 @@ function Create_workout() {
   const [name, setName] = useState("");
   const [allExersices, setAllExersices] = useState([]);
   const [selectedExersices, setSelectedExersices] = useState([]);
-
+  const [exName, setExName] = useState("");
+  const [muscles, setMuscles] = useState("");
+  const [equipment, setEquipment] = useState("");
+  const [results, setResults] = useState([]);
+  const handleSearch = async () => {
+    try {
+      const params = {};
+      if (name) params.name = name;
+      const response = await axios.get("http://localhost:8000/search_exersices", { params });
+      setResults(response.data);
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  }
   useEffect(() => {
     axios.get("http://localhost:8000/exersices").then((res) => {
       setAllExersices(res.data);
@@ -45,6 +58,22 @@ function Create_workout() {
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <label className="block font-medium">choose exersices from the exersices pool</label>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <h2>Search workout</h2>
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <button onClick={handleSearch}>Search</button>
+
+      <ul>
+        {results.map((ex) => (
+          <li key={ex.id}>{ex.name}</li>
+        ))}
+      </ul>
+    </div>
         {allExersices.map(ex => (
           <div key={ex.exersice_id} style={{
         display: 'flex',

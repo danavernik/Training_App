@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import axios from "axios";
 
 function Perform_exersice() {
@@ -8,7 +8,8 @@ const { id} = useParams();
   const [placement, setPlacement] = useState(1); 
   const [error, setError] = useState(null);
   const [seconds, setSeconds] = useState(0);
-
+  const [isRunning, setIsRunning] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     const fetchExercise = async () => {
@@ -26,11 +27,20 @@ const { id} = useParams();
   }, [id, placement]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(prev => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+      if (isRunning) {
+        intervalRef.current = setInterval(() => {
+          setSeconds(prev => prev + 1);
+        }, 1000);
+      } else if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning]);
+
+  const handlePauseResume = () => {
+  setIsRunning(prev => !prev);
+  };
 
   const handleNext = async () => {
     const data = {
@@ -40,7 +50,6 @@ const { id} = useParams();
       workout_id: Number(id),
       exersice_id: exersice.id
     };
-
     try {
       const response = await fetch("http://localhost:8000/progress", {
         method: "POST",
@@ -49,9 +58,8 @@ const { id} = useParams();
         },
         body: JSON.stringify(data),
       });
-
       const responseText = await response.text(); // נשלוף את גוף התגובה (גם אם שגיאה)
-  console.error("Body:", responseText);
+      console.error("Body:", responseText);
       if (!response.ok) {
         console.error("Server error:");
         console.error("Status:", response.status);
@@ -59,7 +67,6 @@ const { id} = useParams();
 
         throw new Error(`Failed to save progress. Status: ${response.status}`);
       }
-
       alert("Progress data saved!");
     } catch (error) {
       console.error("Error:", error);
@@ -67,8 +74,10 @@ const { id} = useParams();
     }
         setPlacement((prev) => prev + 1)
         setSeconds(0);
+        setIsRunning(prev => !prev);
     };
 
+  
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!exersice) return <p>Loading exercise...</p>;
   return (
@@ -79,6 +88,9 @@ const { id} = useParams();
         <img  src={exersice.gif_url}  style={{ maxWidth: "300px", height: "auto", marginTop: "1rem" }}/>
         <div style={{ display: 'flex', justifyContent: 'center' }}>timer: {seconds} seconds</div>
         <button onClick={handleNext}>Im done!</button>
+        <button onClick={handlePauseResume}>start/pause</button>
+
+
     </div>
   );
 }
