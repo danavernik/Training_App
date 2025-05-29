@@ -7,7 +7,6 @@ def load_exersices():
     db: Session = SessionLocal()
     with open('exersices.json', encoding='utf-8') as f:
         data = json.load(f)
-    
     for item in data:
         exersice_db = exersice(**item)
         db.add(exersice_db)

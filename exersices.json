@@ -1,44 +1,14 @@
 [
   {
-    "name":"Cable Bench Press",
-    "muscles": "Pectoralis",
-    "equipment": "bench, stirrups",
-    "gif_url": "http://localhost:8000/static/gifs/CableBenchPress.gif"
+    "name":"Bent-over Row",
+    "muscles": "Back",
+    "equipment": "bench,dumbbell",
+    "gif_url": "http://localhost:8000/static/gifs/DumbbellBent-overRow.gif"
   },
   {
-    "name":"Dumbbell Shoulder Press",
-    "muscles": "Deltoid",
-    "equipment": "dumbbells",
-    "gif_url": "http://localhost:8000/static/gifs/DumbbellShoulderPress.gif"
-  },
-  {
-    "name":"Barbell Hip Thrust",
-    "muscles": "Gluteus Maximus",
-    "equipment": "bench, barbell",
-    "gif_url": "http://localhost:8000/static/gifs/BarbellHipThrust.gif"
-  },
-  {
-    "name":"Squat",
-    "muscles": "Gluteus Maximus",
-    "equipment": "none",
-    "gif_url": "http://localhost:8000/static/gifs/squat.gif"
-  },
-  {
-    "name":"Step-up",
-    "muscles": "Gluteus Maximus",
-    "equipment": "bench, step or platform",
-    "gif_url": "http://localhost:8000/static/gifs/step-ups.gif"
-  },
-  {
-    "name":"Barbell Good-morning",
-    "muscles": "Hamstrings",
-    "equipment": "barbell",
-    "gif_url": "http://localhost:8000/static/gifs/barbellGoodMorning.gif"
-  },
-  {
-    "name":"Hyperextension",
-    "muscles": "Hamstrings",
-    "equipment": "Hyperextension machine",
-    "gif_url": "http://localhost:8000/static/gifs/Hyperextension.gif"
+    "name":"Pull-up",
+    "muscles": "Back",
+    "equipment": "bar",
+    "gif_url": "http://localhost:8000/static/gifs/pull-Ups.gif"
   }
 ]

@@ -1,4 +1,3 @@
-/*import React, { useRef } from "react";*/
 import { useNavigate } from "react-router-dom";
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -97,11 +96,11 @@ return(
     <Box
     sx={{
       display: 'block',
-      flexDirection: 'column',  // כדי לסדר את הכפתורים והכיתוב אחד מעל השני
+      flexDirection: 'column', 
       justifyContent: 'center',
       minHeight: '100vh',
       alignItems: 'center',
-      gap: 4,  // רווח בין האלמנטים
+      gap: 4 
     }}
   >
     <Typography sx={{ display: 'flex', justifyContent: 'center',fontFamily:'Impact', fontSize: '80px'}}>Build Your Workout</Typography>

@@ -58,23 +58,22 @@ const { id} = useParams();
         },
         body: JSON.stringify(data),
       });
-      const responseText = await response.text(); // נשלוף את גוף התגובה (גם אם שגיאה)
+      const responseText = await response.text();
       console.error("Body:", responseText);
       if (!response.ok) {
         console.error("Server error:");
         console.error("Status:", response.status);
-      /* console.error("Body:", responseText);*/
-
         throw new Error(`Failed to save progress. Status: ${response.status}`);
       }
       alert("Progress data saved!");
-    } catch (error) {
+    } 
+    catch (error) {
       console.error("Error:", error);
       alert(`Error saving progress: ${error.message}`);
     }
-        setPlacement((prev) => prev + 1)
-        setSeconds(0);
-        setIsRunning(prev => !prev);
+    setPlacement((prev) => prev + 1)
+    setSeconds(0);
+    setIsRunning(prev => !prev);
     };
 
   

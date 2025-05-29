@@ -59,20 +59,7 @@ function Create_workout() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <label className="block font-medium">choose exersices from the exersices pool</label>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <h2>Search exercise</h2>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
 
-      <ul>
-        {results.map((ex) => (
-          <li key={ex.id}>{ex.name}</li>
-        ))}
-      </ul>
     </div>
         {allExersices.map(ex => (
           <div key={ex.exersice_id} style={{
@@ -92,9 +79,9 @@ function Create_workout() {
 
       {selectedExersices.length > 0 && (
         <div>
-          <h3 className="font-semibold">תרגילים שנבחרו:</h3>
+          <h3 className="font-semibold">chosen:</h3>
           {selectedExersices.map((ex, index) => {
-            const name = allExersices.find(e => e.exersice_id === ex.exersice_id)?.name || "לא נמצא";
+            const name = allExersices.find(e => e.exersice_id === ex.exersice_id)?.name || "not found";
             return (
               <div key={index} className="flex items-center space-x-2">
                 <span>{index + 1}. {name}</span>
@@ -104,14 +91,14 @@ function Create_workout() {
                   onChange={(e) => handleRepsChange(index, Number(e.target.value))}
                   className="border p-1 w-20"
                 />
-                <span>חזרות</span>
+                <span>repetitions</span>
               </div>
             );
           })}
         </div>
       )}
 
-      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">צור אימון</button>
+      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">create</button>
     </form>
   );
 }
