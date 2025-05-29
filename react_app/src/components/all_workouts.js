@@ -35,7 +35,6 @@ function All_workouts() {
 <div>
       <h1 style={{ display: 'flex', justifyContent: 'center' }}>All Workouts</h1>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <h2>Search workout</h2>
       <input
         type="text"
         placeholder="Name"

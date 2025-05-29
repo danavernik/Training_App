@@ -1,14 +1,20 @@
 [
   {
-    "name":"Bent-over Row",
-    "muscles": "Back",
-    "equipment": "bench,dumbbell",
-    "gif_url": "http://localhost:8000/static/gifs/DumbbellBent-overRow.gif"
+    "name":"Split Squat",
+    "muscles": "Quadriceps",
+    "equipment": "",
+    "gif_url": "http://localhost:8000/static/gifs/SplitSquat.gif"
   },
   {
-    "name":"Pull-up",
+    "name":"Step Down",
+    "muscles": "Quadriceps",
+    "equipment": "stair",
+    "gif_url": "http://localhost:8000/static/gifs/Step-Downs.gif"
+  },
+    {
+    "name":"Lever Narrow Grip Seated Row",
     "muscles": "Back",
-    "equipment": "bar",
-    "gif_url": "http://localhost:8000/static/gifs/pull-Ups.gif"
+    "equipment": "Narrow Grip machine",
+    "gif_url": "http://localhost:8000/static/gifs/NarrowGrip.gif"
   }
 ]

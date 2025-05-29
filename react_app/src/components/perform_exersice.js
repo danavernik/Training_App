@@ -51,26 +51,20 @@ const { id} = useParams();
       exersice_id: exersice.id
     };
     try {
-      const response = await fetch("http://localhost:8000/progress", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const responseText = await response.text();
-      console.error("Body:", responseText);
-      if (!response.ok) {
-        console.error("Server error:");
-        console.error("Status:", response.status);
-        throw new Error(`Failed to save progress. Status: ${response.status}`);
-      }
+      const response = await axios.post("http://localhost:8000/progress", data);
       alert("Progress data saved!");
-    } 
+      }
     catch (error) {
-      console.error("Error:", error);
-      alert(`Error saving progress: ${error.message}`);
+      if (error.response) {
+        console.error("Server error:");
+        console.error("Status:", error.response.status);
+        console.error("Body:", error.response.data);
+        alert(`Error saving progress: ${error.response.status}`);
+    } else {
+    console.error("Error:", error.message);
+    alert(`Error saving progress: ${error.message}`);
     }
+  }
     setPlacement((prev) => prev + 1)
     setSeconds(0);
     setIsRunning(prev => !prev);

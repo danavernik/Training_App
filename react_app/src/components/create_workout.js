@@ -39,6 +39,14 @@ function Create_workout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+    alert("Please enter a workout name.");
+    return;
+  }
+  if (selectedExersices.length === 0) {
+    alert("Please select at least one exercise.");
+    return;
+  }
     axios.post("http://localhost:8000/workouts", {
       name,user_id: 1,
       workout_exersices: selectedExersices
