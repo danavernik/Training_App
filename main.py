@@ -137,8 +137,8 @@ def search_exersices(name: str = Query(None), muscles: str = Query(None), equipm
     return query.all()
 
 @app.get("/search_workouts") #חיפוש אימון לפי שם
-def search_exersices(name: str = Query(None), db: Session = Depends(get_db)):
-    query = db.query(exersice)
+def search_workouts(name: str = Query(None), db: Session = Depends(get_db)):
+    query = db.query(workout)
     if name:
-        query = query.filter(exersice.name.ilike(f"%{name}%"))
+        query = query.filter(workout.name.ilike(f"%{name}%"))
     return query.all()

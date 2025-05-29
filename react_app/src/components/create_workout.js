@@ -59,7 +59,7 @@ function Create_workout() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <label className="block font-medium">choose exersices from the exersices pool</label>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <h2>Search workout</h2>
+      <h2>Search exercise</h2>
       <input
         type="text"
         placeholder="Name"

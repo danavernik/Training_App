@@ -45,9 +45,13 @@ function All_workouts() {
       <button onClick={handleSearch}>Search</button>
 
       <ul>
-        {results.map((ex) => (
-          <li key={ex.id}>{ex.name}</li>
-        ))}
+        {results.map((workout) => (
+            <li key={workout.id}>
+              <Link to={`/workouts/${workout.workout_id}`} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
+                {workout.name}
+              </Link>
+            </li>
+          ))}
       </ul>
     </div>
       {workouts.map((workout) => (
